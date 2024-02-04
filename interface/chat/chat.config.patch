@@ -1,0 +1,22 @@
+[
+  {
+    "op": "replace",
+    "path": "/gui/panefeature/offset/0",
+    "value": -1000
+  },
+  {
+    "op": "replace",
+    "path": "/config/visTime",
+    "value": 0
+  },
+  {
+    "op": "replace",
+    "path": "/config/fadeRate",
+    "value": 0
+  },
+  {
+    "op": "add",
+    "path": "/gui/textBox/visible",
+    "value": false
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "version" : "1.5.3/x1.0.0",
+  "author" : "FezzedOne and Degranon",
+  "requires" : [],
+  "description" : "xAdvancedChat",
+  "path" : ".",
+  "name" : "xAdvancedChat",
+  "includes" : []
+}

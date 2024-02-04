@@ -1,0 +1,15 @@
+{
+  "starcustomchat": {
+    "name": "Star Custom Chat",
+    "bannerName" : "Advanced chat by Degranon",
+    "binds": {
+      "repeatcommand": {
+        "default": [{
+          "type": "key",
+          "value": "P"
+        }],
+        "name": "Repeat last command"
+      }
+    }
+  }
+}

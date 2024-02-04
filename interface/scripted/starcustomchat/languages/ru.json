@@ -1,0 +1,53 @@
+{
+  "name": "RUS",
+
+  "chat.modes.Local": "Локал",
+  "chat.modes.Broadcast": "Общий",
+  "chat.modes.Party": "Группа",
+  "chat.modes.Whisper": "Личные",
+  "chat.modes.RadioMessage": "Броски",
+  "chat.modes.CommandResult": "Команды",
+
+  "chat.commands.copy": "Скопировать",
+  "chat.commands.ping": "Пингануть",
+  "chat.commands.dm": "Личное сообщение",
+  "chat.commands.collapse": "Свернуть сообщение",
+  "chat.commands.uncollapse": "Развернуть сообщение",
+
+  "chat.textbox.hint": "Введите сообщение",
+  "chat.dming.hint": "Отправить ЛС:",
+
+  "chat.alerts.dm_not_specified": "Выбери персонажа, чтобы отправить текст",
+  "chat.alerts.dm_not_found": "Игрок не на планете",
+  "chat.alerts.stagehand_not_found": "^red;Сервер не поддерживает данный чат",
+  "chat.alerts.copied_to_clipboard": "Скопировано",
+  "chat.alerts.cannot_start_two_slashes": "Команда не должна начинаться с двух слешей",
+  "chat.alerts.cannot_ping_server": "Нельзя упоминать сервер",
+  "chat.alerts.cannot_ping_command": "Нельзя упоминать результаты команд",
+  "chat.alerts.cannot_ping_time": "Жди ещё %d секунд перед пингом",
+  "chat.alerts.cannot_ping_yourself": "Зачем самого себя пинговать?",
+  "chat.alerts.cannot_dm_server": "Нельзя отправить ЛС серверу",
+  "chat.alerts.cannot_dm_command_result": "Нельзя отправить ЛС результату команды",
+  "chat.alerts.pinged": "Пинганули %s",
+  "chat.alerts.ping_failed": "Не смогли пингануть %s",
+  "chat.alerts.was_pinged": "Вас пинганул %s",
+
+  "greeting.se_not_found": "Добро пожаловать в xAdvancedChat, вилка FezzedOne от Advanced Chat Дегранона для xSB-2!\n\nДля работы этого мода требуется xSB-2 версии 2.3.7+.\nhttps://github.com/FezzedOne/xSB-2",
+  "greeting.se_version": "Добро пожаловать в xAdvancedChat, вилка FezzedOne от Advanced Chat Дегранона для xSB-2!\n\nОбновите ваш клиент xSB-2 до версии 2.3.7+.\nhttps://github.com/FezzedOne/xSB-2",
+  "greeting.unbind_controls": "Добро пожаловать в xAdvancedChat, вилка FezzedOne от Advanced Chat Дегранона для xSB-2!\n\nДля начала вам нужно вручную отвязать следующие управляющие элементы (Esc > Опции > Управление > Игра):\n\n* Begin Chat Command\n* Begin Chat\n* Repeat Last Command ^gray;(используйте привязку мода вместо)^reset;\n\nНажмите \"Принять\", и вы готовы к работе!",
+  "greeting.unknown": "Добро пожаловать в xAdvancedChat, вилка FezzedOne от Advanced Chat Дегранона для xSB-2!\n\nПроизошла неизвестная ошибка; проверьте ^red;xclient.log^reset;.",
+  "greeting.close": "Понял!",
+
+  "settings.title": "Настройки чата",
+  "settings.subtitle": "xAdvancedChat",
+  "settings.font_size": "Размер чата",
+  "settings.chat_mode": "Режим чата",
+  "settings.ok": "Принять",
+  "settings.cancel": "Отменить",
+  "settings.clear_chat_history": "Очистить чат",
+  "settings.reset_avatar": "Сброс портрета",
+  "settings.chat_collapse": "Макс. символов в сообщении\n0 = не сворачивать",
+
+  "settings.modes.compact": "Компакт.",
+  "settings.modes.modern": "Полный"
+}
