@@ -180,13 +180,15 @@ end
 
 function IrdenChat:processCommand(text)
   local commandResult = chat.command(text)
-  for _, line in ipairs(commandResult) do 
-    chat.addMessage(line)
-    table.insert(self.messages, {
-      text = line
-    })
-    if #self.messages > self.config.chatHistoryLimit then
-      table.remove(self.messages, 1)
+  if commandResult then
+    for _, line in ipairs(commandResult) do 
+      chat.addMessage(line)
+      table.insert(self.messages, {
+        text = line
+      })
+      if #self.messages > self.config.chatHistoryLimit then
+        table.remove(self.messages, 1)
+      end
     end
   end
 end
