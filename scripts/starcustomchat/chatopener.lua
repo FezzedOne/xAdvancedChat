@@ -21,21 +21,16 @@ end
 function checkSEAndControls()
   local v = require "/scripts/semver.lua"
   -- Now checks whether xSB-2 is loaded and has a minimum version number.
-  if not _ENV["xsb"] then
+  if not _ENV["xsb"] or not root.assetData then
     return "se_not_found"
-  elseif not root.assetData("/scripts/starextensions/lib/chat_callback.lua") then
-    return "se_version"
-  elseif v(xsb.version()) < v"2.3.7" then
-    return "se_version"
   else
-    require("/scripts/starextensions/lib/chat_callback.lua")
-    if not setChatMessageHandler then
+    local v = load(root.assetData("/scripts/semver.lua"))()
+    if v(xsb.version()) < v"2.3.7" then
       return "se_version"
-    else
-      local bindings = root.getConfiguration("bindings")
-      if #bindings["ChatBegin"] > 0 or #bindings["ChatBeginCommand"] > 0 or #bindings["InterfaceRepeatCommand"] > 0 then
-        return "unbind_controls"
-      end
+    end
+    local bindings = root.getConfiguration("bindings")
+    if #bindings["ChatBegin"] > 0 or #bindings["ChatBeginCommand"] > 0 or #bindings["InterfaceRepeatCommand"] > 0 then
+      return "unbind_controls"
     end
   end
 end

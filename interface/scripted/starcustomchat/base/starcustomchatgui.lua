@@ -140,7 +140,17 @@ end
 
 function registerCallbacks()
 
-  handlerCutter = setChatMessageHandler(self.chatFunctionCallback)
+  message.setHandler("newChatMessage", function(_, sameClient, message)
+    if sameClient then 
+      if self.irdenChat and self.irdenChat.addMessage then
+        self.irdenChat:addMessage(message)
+      else
+        
+      end 
+    end
+  end)
+  -- handlerCutter = setChatMessageHandler(self.chatFunctionCallback)
+
   shared.setMessageHandler( "icc_request_player_portrait", simpleHandler(function()
     if player.id() and world.entityExists(player.id()) then
       return {
@@ -829,5 +839,5 @@ function uninit()
   end
 
   saveEverythingDude()
-  handlerCutter()
+  -- handlerCutter()
 end
