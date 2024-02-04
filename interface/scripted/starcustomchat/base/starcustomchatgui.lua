@@ -140,13 +140,11 @@ end
 
 function registerCallbacks()
 
-  message.setHandler("newChatMessage", function(_, sameClient, message)
-    if sameClient then 
+  message.setHandler("newChatMessage", function(_, sameClient, chatMessage)
+    if sameClient then
       if self.irdenChat and self.irdenChat.addMessage then
-        self.irdenChat:addMessage(message)
-      else
-        
-      end 
+        self.irdenChat:addMessage(chatMessage)
+      end
     end
   end)
   -- handlerCutter = setChatMessageHandler(self.chatFunctionCallback)
