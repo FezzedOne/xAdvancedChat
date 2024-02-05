@@ -583,6 +583,14 @@ function processButtonEvents(dt)
     chat.setInput("")
   end
 
+  if input.keyDown("Esc") then
+    if widget.hasFocus("tbxInput") then
+      widget.blur("tbxInput")
+    else
+      shared.chatIsOpen = false
+      pane.dismiss()
+    end
+  end
 
   if widget.hasFocus("tbxInput") then
     for _, event in ipairs(input.events()) do
