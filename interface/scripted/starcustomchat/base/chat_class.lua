@@ -416,12 +416,16 @@ function IrdenChat:processQueue()
       message.collapsed = nil
     end
 
-    widget.setText(labelToCheck, text)
+    if widget then
+      widget.setText(labelToCheck, text)
+    end
     local sizeOfText = widget.getSize(labelToCheck)
     if not sizeOfText then return end 
     message.n_lines = (sizeOfText[2] + self.config.spacings.lines) // (self.config.fontSize + self.config.spacings.lines)
     message.height = sizeOfText[2]
-    widget.setText(labelToCheck, "")
+    if widget then
+      widget.setText(labelToCheck, "")
+    end
 
     -- Calculate message offset
     local messageOffset = self.lineOffset * (self.config.fontSize + self.config.spacings.lines)
