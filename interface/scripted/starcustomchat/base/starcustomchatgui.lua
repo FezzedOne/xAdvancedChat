@@ -552,13 +552,14 @@ end
 function processEvents(screenPosition)
   for _, event in ipairs(input.events()) do
     if event.type == "MouseWheel" and widget.inMember("backgroundImage", screenPosition) then
+      local mouseWheel = event.data.mouseWheel == "MouseWheelUp" and 1 or -1
       if input.key("LCtrl") then
-        self.irdenChat.config.fontSize = math.min(math.max(self.irdenChat.config.fontSize + event.data.mouseWheel, 6), 10)
+        self.irdenChat.config.fontSize = math.min(math.max(self.irdenChat.config.fontSize + mouseWheel, 6), 10)
         root.setConfiguration("icc_font_size", self.irdenChat.config.fontSize)
         createTotallyFakeWidgets(self.irdenChat.config.wrapWidthFullMode, self.irdenChat.config.wrapWidthCompactMode, self.irdenChat.config.fontSize)
         self.irdenChat:processQueue()
       else
-        self.irdenChat:offsetCanvas(event.data.mouseWheel * -1 * (input.key("LShift") and 2 or 1))
+        self.irdenChat:offsetCanvas(mouseWheel * -1 * (input.key("LShift") and 2 or 1))
       end
     elseif event.type == "KeyDown" then
       if event.data.key == "PageUp" then
