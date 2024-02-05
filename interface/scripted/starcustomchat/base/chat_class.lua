@@ -89,7 +89,7 @@ function IrdenChat:addMessage(msg)
     else
       if message.mode == "Whisper" then
         if self.lastWhisper and message.text == self.lastWhisper.text then
-          message.recepient = self.lastWhisper.recepient
+          message.recipient = self.lastWhisper.recipient
           self.lastWhisper = nil
         else
           pane.playSound(self.config.notificationSound)
@@ -182,13 +182,15 @@ function IrdenChat:processCommand(text)
   local commandResult = chat.command(text)
   if commandResult then
     for _, line in ipairs(commandResult) do 
-      chat.addMessage(line)
-      table.insert(self.messages, {
-        text = line
-      })
-      if #self.messages > self.config.chatHistoryLimit then
-        table.remove(self.messages, 1)
-      end
+      -- chat.addMessage(line)
+      -- table.insert(self.messages, {
+      --   text = line
+      -- })
+      -- if #self.messages > self.config.chatHistoryLimit then
+      --   table.remove(self.messages, 1)
+      -- end
+      sb.logInfo("Line = \"%s\"", line)
+      self:addMessage({text = line, connection = 0, mode = "CommandResult"})
     end
   end
 end
@@ -226,7 +228,7 @@ function IrdenChat:previewCommands(commands, selected)
   }, self.config.previewCommandFontSize)
 end
 
-function IrdenChat:drawIcon(target, nickname, messageOffset, color, time, recepient)
+function IrdenChat:drawIcon(target, nickname, messageOffset, color, time, recipient)
   local function drawModeIcon(offset)
     local frameSize = root.imageSize(self.config.icons.frame)
     local squareSize = self.config.modeIndicatorSize
@@ -279,7 +281,7 @@ function IrdenChat:drawIcon(target, nickname, messageOffset, color, time, recepi
   local nameOffset = vec2.add(self.config.nameOffset, {size, size})
   nameOffset = vec2.add(nameOffset, messageOffset)
 
-  self.canvas:drawText(recepient and "-> " .. starcustomchat.utils.cleanNickname(recepient) or starcustomchat.utils.cleanNickname(nickname), {
+  self.canvas:drawText(recipient and "-> " .. starcustomchat.utils.cleanNickname(recipient) or starcustomchat.utils.cleanNickname(nickname), {
     position = nameOffset,
     horizontalAnchor = "left", -- left, mid, right
     verticalAnchor = "top" -- top, mid, bottom
@@ -450,7 +452,7 @@ function IrdenChat:processQueue()
 
         if message.avatar then
           local offset = {0, messageOffset + self.config.textOffsetFullMode[2] + message.height - self.config.fontSize}
-          self:drawIcon(message.portrait, message.nickname, offset, self.config.modeColors[messageMode], message.time, message.recepient)
+          self:drawIcon(message.portrait, message.nickname, offset, self.config.modeColors[messageMode], message.time, message.recipient)
           message.height = message.height + self.config.spacings.name + self.config.fontSize + 1
         end
       end

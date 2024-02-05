@@ -5,6 +5,7 @@ require "/scripts/util.lua"
 
 function buildChatInterface()
   local baseInterface = root.assetJson("/interface/scripted/starcustomchat/base/chatgui.json")
+  local chatConfig = root.assetJson("/interface/scripted/starcustomchat/base/chat.config")
   local enabledPlugins = root.assetJson("/scripts/starcustomchat/enabledplugins.json")
   local disabledModes = root.assetJson("/scripts/starcustomchat/disabledmodes.json")
 
@@ -56,6 +57,8 @@ function buildChatInterface()
         hoverImage = string.format("/interface/scripted/starcustomchat/base/tabmodes/chatmode%d.png?brightness=30", totalNModes),
         baseImageChecked = string.format("/interface/scripted/starcustomchat/base/tabmodes/chatmode%dselected.png", totalNModes),
         hoverImageChecked = string.format("/interface/scripted/starcustomchat/base/tabmodes/chatmode%dselected.png?brightness=30", totalNModes),
+        fontColor = chatConfig.unselectedModeColor,
+        fontColorDisabled = chatConfig.disabledModeColor,
         pressedOffset = {0, 0},
         position = {(tab_id - 1) * tabWidth, 0},
         selected = tab_id == 1,

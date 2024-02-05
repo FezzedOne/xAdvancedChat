@@ -6,6 +6,8 @@ if type(shared) ~= "table" then
   getmetatable('').shared = shared
 end
 
+shared.queuedChatMessages = shared.queuedChatMessages or jarray()
+
 function init()
   local reasonToNotStart = checkSEAndControls()
   if reasonToNotStart then
@@ -13,8 +15,21 @@ function init()
     sewarningConfig.reason = reasonToNotStart
     player.interact("ScriptPane", sewarningConfig)
   else
+    shared.queuedChatMessages = storage.queuedChatMessages or shared.queuedChatMessages
+    storage.queuedChatMessages = nil
     self.interface = buildChatInterface()
     shared.setMessageHandler = message.setHandler
+    message.setHandler("newChatMessage", function(_, sameClient, chatMessage)
+      if sameClient then
+        local chatShown = world.sendEntityMessage(player.id(), "xAdvChat.addQueuedMessages", shared.queuedChatMessages):succeeded()
+        if chatShown then
+          world.sendEntityMessage(player.id(), "xAdvChat.addMessage", chatMessage)
+          shared.queuedChatMessages = jarray()
+        else
+          table.insert(shared.queuedChatMessages, chatMessage)
+        end
+      end
+    end)
   end
 end
 
@@ -43,4 +58,6 @@ function update(dt)
 end
 
 function uninit()
+  storage.queuedChatMessages = shared.queuedChatMessages
+  shared.queuedChatMessages = nil
 end

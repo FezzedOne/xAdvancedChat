@@ -13,8 +13,6 @@ if type(shared) ~= "table" then
   getmetatable('').shared = shared
 end
 
-local handlerCutter = nil
-
 ICChatTimer = TimerKeeper.new()
 function init()
   shared.chatIsOpen = true
@@ -22,6 +20,7 @@ function init()
   self.highlightCanvasName = "cnvHighlightCanvas"
   self.commandPreviewCanvasName = "lytCommandPreview.cnvCommandsCanvas"
   self.chatWindowWidth = widget.getSize("backgroundImage")[1]
+  self.shouldDismiss = false
 
   self.availableCommands = root.assetJson("/interface/scripted/starcustomchat/base/commands.config")
 
@@ -125,11 +124,8 @@ function init()
     widget.setText("lytDMingTo.lblRecepient", self.DMingTo)
   end
 
-  self.chatFunctionCallback = function(message)
-    self.irdenChat:addMessage(message)
-  end
-
   registerCallbacks()
+  addQueuedMessages()
 
   requestPortraits()
   self.irdenChat:processQueue()
@@ -137,17 +133,23 @@ function init()
   ICChatTimer:add(0.5, registerCallbacks)
 end
 
+function addQueuedMessages()
+  if shared.queuedChatMessages then
+    for _, chatMessage in ipairs(shared.queuedChatMessages) do
+      self.irdenChat:addMessage(chatMessage)
+    end
+    shared.queuedChatMessages = jarray()
+  end
+end
 
 function registerCallbacks()
-
-  shared.setMessageHandler("newChatMessage", function(_, sameClient, chatMessage)
+  shared.setMessageHandler("xAdvChat.addMessage", function(_, sameClient, chatMessage)
     if sameClient then
       if self.irdenChat and self.irdenChat.addMessage then
         self.irdenChat:addMessage(chatMessage)
       end
     end
   end)
-  -- handlerCutter = setChatMessageHandler(self.chatFunctionCallback)
 
   shared.setMessageHandler("xAdvChat.getChat", function(_, sameClient)
     if sameClient then
@@ -277,7 +279,19 @@ function localeChat(localePluginConfig)
 end
 
 function dismissed()
+  -- FezzedOne: Due to how hacky this is, all "smuggled" message handlers
+  -- must be cleared to prevent segfaults.
   shared.chatIsOpen = false
+  shared.setMessageHandler("xAdvChat.addMessage", nil)
+  shared.setMessageHandler("xAdvChat.getChat", nil)
+  shared.setMessageHandler("icc_request_player_portrait", nil)
+  shared.setMessageHandler("icc_sendToUser", nil)
+  shared.setMessageHandler("icc_is_chat_open", nil)
+  shared.setMessageHandler("icc_close_chat", nil)
+  shared.setMessageHandler("icc_send_player_portrait", nil)
+  shared.setMessageHandler("icc_reset_settings", nil)
+  shared.setMessageHandler("icc_clear_history", nil)
+  shared.setMessageHandler("icc_ping", nil)
 end
 
 function update(dt)
@@ -295,11 +309,17 @@ function update(dt)
 
   if not player.id() or not world.entityExists(player.id()) then
     shared.chatIsOpen = false
+    uninit()
     pane.dismiss()
   end
 
   self.ReplyTime = math.max(self.ReplyTime - dt, 0)
   self.runCallbackForPlugins("update", dt)
+
+  if self.shouldDismiss then
+    uninit()
+    pane.dismiss()
+  end
 end
 
 function cursorOverride(screenPosition)
@@ -588,7 +608,7 @@ function processButtonEvents(dt)
       widget.blur("tbxInput")
     else
       shared.chatIsOpen = false
-      pane.dismiss()
+      self.shouldDismiss = true
     end
   end
 
@@ -649,7 +669,7 @@ function enableDM()
         widget.setPosition(self.highlightCanvasName, vec2.add(widget.getPosition(self.highlightCanvasName), {0, widget.getSize("lytDMingTo")[2]}))
       end
       widget.setVisible("lytDMingTo", true)
-      self.DMingTo = self.selectedMessage.recepient or self.selectedMessage.nickname
+      self.DMingTo = self.selectedMessage.recipient or self.selectedMessage.nickname
       widget.setText("lytDMingTo.lblRecepient", self.DMingTo)
       widget.focus("tbxInput")
     end
@@ -756,7 +776,7 @@ function textboxEnterKey(widgetName)
 
     processCommand(whisper)
     self.irdenChat.lastWhisper = {
-      recepient = whisperName,
+      recipient = whisperName,
       text = text
     }
     starcustomchat.utils.saveMessage(whisper)
@@ -855,5 +875,4 @@ function uninit()
   end
 
   saveEverythingDude()
-  -- handlerCutter()
 end

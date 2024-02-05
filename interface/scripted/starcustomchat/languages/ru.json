@@ -5,7 +5,7 @@
   "chat.modes.Broadcast": "Общий",
   "chat.modes.Party": "Группа",
   "chat.modes.Whisper": "Личные",
-  "chat.modes.RadioMessage": "Броски",
+  "chat.modes.RadioMessage": "Радиосообщения",
   "chat.modes.CommandResult": "Команды",
 
   "chat.commands.copy": "Скопировать",

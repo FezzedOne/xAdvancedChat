@@ -6,17 +6,20 @@ mainchat = PluginClass:new(
 
 function mainchat:init()
   self:_loadConfig()
+  -- self.baseInterfaceConfig = root.assetJson("/interface/scripted/starcustomchat/base/chat.config")
 end
 
 function mainchat:update()
   local id = findButtonByMode("Party")
   if #player.teamMembers() == 0 then
     widget.setButtonEnabled("rgChatMode." .. id, false)
+    -- widget.setFontColor("rgChatMode." .. id, self.baseInterfaceConfig.disabledModeColor)
     if widget.getSelectedData("rgChatMode").mode == "Party" then
       widget.setSelectedOption("rgChatMode", 1)
     end
   else
     widget.setButtonEnabled("rgChatMode." .. id, true)
+    -- widget.setFontColor("rgChatMode." .. id, self.baseInterfaceConfig.unselectedModeColor)
   end
 end
 

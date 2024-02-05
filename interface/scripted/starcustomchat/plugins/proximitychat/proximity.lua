@@ -74,11 +74,28 @@ function proximitychat:onSettingsUpdate(data)
   self.proximityRadius = root.getConfiguration("icc_proximity_radius") or self.proximityRadius
 end
 
+function clamp(value, min, max)
+  return math.max(math.min(value, max), min)
+end
+
 function proximitychat:onCursorOverride(screenPosition)
   local id = findButtonByMode("Proximity")
   if widget.inMember("rgChatMode." .. id, screenPosition) and player.id() and world.entityPosition(player.id()) then
-    drawCircle(world.entityPosition(player.id()), self.proximityRadius, "green")
+    drawCircle(world.entityPosition(player.id()), self.proximityRadius, {255, 0, 0, 255}, clamp(math.floor(self.proximityRadius * 2.0), 10, 50))
   end
+end
+
+function worldToScreen(coord)
+  local camera = vec2.mul(vec2.sub(coord, interface.cameraPosition()), 8.0 * interface.worldPixelRatio())
+  local windowCentre = vec2.mul(interface.windowSize(), 0.5)
+  local x, y = table.unpack(vec2.add(windowCentre, camera))
+  return {math.floor(x + 0.5), math.floor(y + 0.5)}
+end
+
+function adjustCoords(coord1, coord2)
+  local adjCoord1 = vec2.mul(coord1, 8.0 * interface.worldPixelRatio())
+  local adjCoord2 = vec2.mul(coord2, 8.0 * interface.worldPixelRatio())
+  return {adjCoord1, adjCoord2}
 end
 
 function drawCircle(center, radius, color, sections)
@@ -88,11 +105,13 @@ function drawCircle(center, radius, color, sections)
     local endAngle = math.pi * 2 / sections * i
     local startLine = vec2.add(center, {radius * math.cos(startAngle), radius * math.sin(startAngle)})
     local endLine = vec2.add(center, {radius * math.cos(endAngle), radius * math.sin(endAngle)})
+    local lineCentre = {(startLine[1] + endLine[1]) * 0.5, (startLine[2] + endLine[2]) * 0.5}
+    local adjStartLine, adjEndLine = vec2.sub(lineCentre, startLine), vec2.sub(lineCentre, endLine)
     interface.drawDrawable({
-      line = {camera.worldToScreen(startLine), camera.worldToScreen(endLine)},
+      line = adjustCoords(adjStartLine, adjEndLine),
       width = 1,
       color = color
-    }, {0, 0}, 1, color)
+    }, worldToScreen(lineCentre), 1)
   end
 end
 

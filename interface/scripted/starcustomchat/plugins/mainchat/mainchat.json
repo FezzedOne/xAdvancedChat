@@ -4,12 +4,12 @@
   "modes": [{
     "name": "Broadcast",
     "has_tab": true,
-    "tab_priority": 0,
+    "tab_priority": 10,
     "has_toggle": true
   },{
     "name": "Local",
     "has_tab": true,
-    "tab_priority": 10,
+    "tab_priority": 0,
     "has_toggle": true
   },{
     "name": "Party",

@@ -2,11 +2,11 @@
   "name": "ENG",
   
   "chat.modes.Local": "Local",
-  "chat.modes.Broadcast": "Broadcast",
+  "chat.modes.Broadcast": "Global",
   "chat.modes.Party": "Party",
   "chat.modes.Whisper": "Whisper",
-  "chat.modes.RadioMessage": "RadioMessage",
-  "chat.modes.CommandResult": "CommandResult",
+  "chat.modes.RadioMessage": "Radio messages",
+  "chat.modes.CommandResult": "Commands",
 
   "chat.commands.copy": "Copy message",
   "chat.commands.ping": "Ping user",

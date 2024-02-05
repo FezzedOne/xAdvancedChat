@@ -10,7 +10,7 @@
 
   "baseConfigValues": {
     "modeColors": {
-      "Proximity" : "darkgreen"
+      "Proximity" : "green"
     },
     "textColors": {
       "Proximity" : "white"
