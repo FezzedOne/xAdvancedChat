@@ -30,8 +30,11 @@ function proximitychat:onSendMessage(data)
     data.time = printTime()
     data.proximityRadius = self.proximityRadius
     
-    if self.stagehandType and self.stagehandType ~= "" then
-      starcustomchat.utils.sendMessageToStagehand(self.stagehandType, "icc_sendMessage", data)
+    -- Degranon: Update to allow a client to spawn a custom stagehand for proximity messages.
+    if self.uniqueStagehandType and self.uniqueStagehandType ~= "" then
+      starcustomchat.utils.sendMessageToStagehand(self.uniqueStagehandType, "icc_sendMessage", data)
+    elseif self.stagehandType and self.stagehandType ~= "" then
+      starcustomchat.utils.createStagehandWithData(self.stagehandType, {message = "sendProxyMessage", data = data})
     else
       
       local function sendMessageToPlayers()

@@ -70,34 +70,28 @@ function starcustomchat.utils.getCommands(allCommands, substr)
   return availableCommands
 end
 
+-- Degranon: Update to proximity chat mode.
 function starcustomchat.utils.sendMessageToStagehand(stagehandType, message, data, callback, errcallback)
-  local n_attempts = 10
-  local findStagehandResult = false
 
-  promises:add(world.findUniqueEntity(stagehandType), function() 
+  local ensureSending = function ()
     promises:add(world.sendEntityMessage(stagehandType, message, data), function (result)
       if callback then
         callback(result)
       end
-    end, function (err)
-      if errcallback then
-        errcallback(err)
-      end
-    end)
-  end, function()
-    
+    end, ensureSending)
+  end
+
+  local ensureSpawning = function()
+    promises:add(world.findUniqueEntity(stagehandType), ensureSending, ensureSpawning)
+  end
+
+  promises:add(world.findUniqueEntity(stagehandType), ensureSending, function()
     world.spawnStagehand(world.entityPosition(player.id()), stagehandType)
 
-    promises:add(world.findUniqueEntity(stagehandType), function() 
-      promises:add(world.sendEntityMessage(stagehandType, message, data), function (result)
-        if callback then
-          callback(result)
-        end
-      end, function (err)
-        if errcallback then
-          errcallback(err)
-        end
-      end)
-    end)
+    promises:add(world.findUniqueEntity(stagehandType), ensureSending, ensureSpawning)
   end)
+end
+
+function starcustomchat.utils.createStagehandWithData(stagehandType, data)
+  world.spawnStagehand(world.entityPosition(player.id()), stagehandType, {data = data})
 end
