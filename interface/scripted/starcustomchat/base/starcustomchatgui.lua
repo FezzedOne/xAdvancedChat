@@ -149,6 +149,12 @@ function registerCallbacks()
   end)
   -- handlerCutter = setChatMessageHandler(self.chatFunctionCallback)
 
+  shared.setMessageHandler("xAdvChat.getChat", function(_, sameClient)
+    if sameClient then
+      return {widget.hasFocus("tbxInput"), widget.getText("tbxInput")}
+    end
+  end)
+
   shared.setMessageHandler( "icc_request_player_portrait", simpleHandler(function()
     if player.id() and world.entityExists(player.id()) then
       return {
