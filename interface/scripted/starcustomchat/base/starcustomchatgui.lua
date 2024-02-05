@@ -276,10 +276,13 @@ function localeChat(localePluginConfig)
   end
 end
 
-function update(dt)
+function dismissed()
+  shared.chatIsOpen = false
+end
 
+function update(dt)
   shared.chatIsOpen = true
-  
+
   ICChatTimer:update(dt)
   promises:update()
 
