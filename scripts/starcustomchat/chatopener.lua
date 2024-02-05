@@ -36,7 +36,7 @@ function checkSEAndControls()
 end
 
 function update(dt)
-  if not shared.chatIsOpen and self.interface then
+  if not shared.chatIsOpen and self.interface and (input.keyDown("Return") or input.keyDown("/")) then
     player.interact("ScriptPane", self.interface)
     shared.chatIsOpen = true
   end
