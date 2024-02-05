@@ -8,6 +8,20 @@ function oocchat:init()
   self:_loadConfig()
 end
 
+function stripSets(s)
+  s = s:gsub("%^;", "^set;")
+  s = s:gsub("%^([^%^][^ ]-);", function(colourCodes)
+    colourCodes = colourCodes:gsub("%^set$", "^")
+    colourCodes = colourCodes:gsub("%^set,", "^")
+    colourCodes = colourCodes:gsub("^set$", "")
+    colourCodes = colourCodes:gsub("^set,", "")
+    colourCodes = colourCodes:gsub(",set$", "")
+    colourCodes = colourCodes:gsub(",set,", ",")
+    return "^" .. colourCodes .. ";"
+  end)
+  return s
+end
+
 function oocchat:formatIncomingMessage(message)
   -- Strip colour codes out of the message.
   local strippedMessage = message.text:gsub("%^;", "^x;")
@@ -36,23 +50,29 @@ function oocchat:formatIncomingMessage(message)
 
   -- Reformat incoming OOC and dice roll messages appropriately.
   if message.text:find("%(%(") then
-    if message.mode ~= "Broadcast" and message.mode ~= "Local" then
-      message.text = string.gsub(message.text, "%(%b()%)", "^gray,set;%1^white,set;")
-      message.text = string.gsub(message.text, "%(%((.*)$", "^gray,set;((%1^white,set;")
+    do -- if message.mode ~= "Broadcast" --[[ and message.mode ~= "Local" ]] then
+      message.text = string.gsub(message.text, "%(%((.-)%)%)", function(s)
+        return "^gray,set;((" .. stripSets(s) .. "))^white,set;"
+      end)
+      -- message.text = string.gsub(message.text, "%(%((.*)$", "^gray,set;((%1^white,set;")
     end
   end
 
   if message.text:find("%[%[") then
-    if message.mode ~= "Broadcast" and message.mode ~= "Local" then
-      message.text = string.gsub(message.text, "%[%b()]", "^gray,set;%1^white,set;")
-      message.text = string.gsub(message.text, "%[%[(.*)$", "^gray,set;[[%1^white,set;")
+    do -- if message.mode ~= "Broadcast" --[[ and message.mode ~= "Local" ]] then
+      message.text = string.gsub(message.text, "%[%[(.-)]]", function(s)
+        return "^gray,set;[[" .. stripSets(s) .. "]]^white,set;"
+      end)
+      -- message.text = string.gsub(message.text, "%[%[(.*)$", "^gray,set;[[%1^white,set;")
     end
   end
 
   if message.text:find("<<") then
-    if message.mode ~= "Broadcast" and message.mode ~= "Local" then
-      message.text = string.gsub(message.text, "<%b()>", "^#ffd499,set;%1^white,set;")
-      message.text = string.gsub(message.text, "<<(.*)$", "^#ffd499,set;<<%1^white,set;")
+    do -- if message.mode ~= "Broadcast" and message.mode ~= "Local" then
+      message.text = string.gsub(message.text, "<<(.-)>>", function(s)
+        return "^#ffd499,set;<<" .. stripSets(s) .. ">>^white,set;"
+      end)
+      -- message.text = string.gsub(message.text, "<<(.*)$", "^#ffd499,set;<<%1^white,set;")
     end
   end
   return message

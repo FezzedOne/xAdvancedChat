@@ -21,9 +21,8 @@ function init()
     shared.setMessageHandler = message.setHandler
     message.setHandler("newChatMessage", function(_, sameClient, chatMessage)
       if sameClient then
-        local chatShown = world.sendEntityMessage(player.id(), "xAdvChat.addQueuedMessages", shared.queuedChatMessages):succeeded()
+        local chatShown = world.sendEntityMessage(player.id(), "xAdvChat.addMessage", chatMessage):succeeded()
         if chatShown then
-          world.sendEntityMessage(player.id(), "xAdvChat.addMessage", chatMessage)
           shared.queuedChatMessages = jarray()
         else
           table.insert(shared.queuedChatMessages, chatMessage)
