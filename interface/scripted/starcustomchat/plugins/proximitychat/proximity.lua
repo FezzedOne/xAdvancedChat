@@ -26,23 +26,105 @@ function printTime()
 end
 
 function proximitychat:onSendMessage(data)
-  if data.mode == "Proximity" then
-    data.time = printTime()
-    data.proximityRadius = self.proximityRadius
-    
+  ---@param s string
+  ---@return string
+  local function stripWhitespace(s)
+    s = s:gsub("[%s]+", " ") -- Trim whitespace.
+    s = s:gsub("^ ", "") -- Trim initial whitespace.
+    s = s:gsub(" $", "") -- Trim trailing whitespace.
+    return s
+  end
+
+  ---@param msg {text: string, mode: string}
+  ---@return {text: string}
+  ---@return {text: string}
+  ---@return {text: string}
+  local function splitMessage(msg)
+    local firstMsg = {
+      text = "",
+      connection = msg.connection,
+      portrait = msg.portrait,
+      mode = msg.mode,
+      nickname = msg.nickname
+    }
+    local secondMsg = {text = ""}
+    local thirdMsg = {text = ""}
+    ---@type string[]
+    local secondParts, thirdParts = {}, {}
+    local msgText = msg.text
+    msgText = msgText:gsub("\\|", "¦") -- Handle escaped pipes.
+    msgText = msgText:gsub("@%(%(%((.-)%)%)%)", function(globalOocPart) -- Handle "@(((message)))".
+      globalOocPart = globalOocPart:gsub("¦", "|")
+      table.insert(thirdParts, "(( " .. globalOocPart .. " ))")
+      return " "
+    end)
+    msgText = msgText:gsub("@%[%[%[(.-)]]]", function(globalOocPart) -- Handle "@[[[message]]]".
+      globalOocPart = globalOocPart:gsub("¦", "|")
+      table.insert(thirdParts, "[[ " .. globalOocPart .. " ]]")
+      return " "
+    end)
+    msgText = msgText:gsub("@<<<(.-)>>>", function(globalRollPart) -- Handle "@<<<message>>>".
+      globalRollPart = globalRollPart:gsub("¦", "|")
+      table.insert(thirdParts, "<< " .. globalRollPart .. " >>")
+      return " "
+    end)
+    msgText = msgText:gsub("@|(.-)|", function(globalIcPart) -- Handle "@|message|".
+      globalIcPart = globalIcPart:gsub("¦", "|")
+      table.insert(thirdParts, globalIcPart)
+      return " "
+    end)
+    msgText = msgText:gsub("%(%(%((.-)%)%)%)", function(localOocPart) -- Handle "(((message)))".
+      localOocPart = localOocPart:gsub("¦", "|")
+      table.insert(secondParts, "(( " .. localOocPart .. " ))")
+      return " "
+    end)
+    msgText = msgText:gsub("%[%[%[(.-)]]]", function(localOocPart) -- Handle "[[[message]]]".
+      localOocPart = localOocPart:gsub("¦", "|")
+      table.insert(secondParts, "[[ " .. localOocPart .. " ]]")
+      return " "
+    end)
+    msgText = msgText:gsub("<<<(.-)>>>", function(localRollPart) -- Handle "<<<message>>>".
+      localRollPart = localRollPart:gsub("¦", "|")
+      table.insert(secondParts, "<< " .. localRollPart .. " >>")
+      return " "
+    end)
+    msgText = msgText:gsub("|(.-)|", function(localIcPart) -- Handle "|message|".
+      localIcPart = localIcPart:gsub("¦", "|")
+      table.insert(secondParts, localIcPart)
+      return " "
+    end)
+    -- Compose the messages.
+    msgText = stripWhitespace(msgText)
+    firstMsg.text = msgText
+    for _, part in ipairs(secondParts) do
+      secondMsg.text = secondMsg.text .. " " .. part
+    end
+    secondMsg.text = stripWhitespace(secondMsg.text)
+    for _, part in ipairs(thirdParts) do
+      thirdMsg.text = thirdMsg.text .. " " .. part
+    end
+    thirdMsg.text = stripWhitespace(thirdMsg.text)
+    return firstMsg, secondMsg, thirdMsg
+  end
+
+  ---@param msg table
+  local function sendProximityMessage(msg)
+    msg.time = printTime()
+    msg.proximityRadius = self.proximityRadius
+
     -- Degranon: Update to allow a client to spawn a custom stagehand for proximity messages.
     if self.uniqueStagehandType and self.uniqueStagehandType ~= "" then
-      starcustomchat.utils.sendMessageToStagehand(self.uniqueStagehandType, "icc_sendMessage", data)
+      starcustomchat.utils.sendMessageToStagehand(self.uniqueStagehandType, "icc_sendMessage", msg)
     elseif self.stagehandType and self.stagehandType ~= "" then
-      starcustomchat.utils.createStagehandWithData(self.stagehandType, {message = "sendProxyMessage", data = data})
+      starcustomchat.utils.createStagehandWithData(self.stagehandType, {message = "sendProxyMessage", data = msg})
     else
       
       local function sendMessageToPlayers()
         local position = player.id() and world.entityPosition(player.id())
         if position then
-          local players = world.playerQuery(position, data.proximityRadius)
+          local players = world.playerQuery(position, msg.proximityRadius)
           for _, pl in ipairs(players) do 
-            world.sendEntityMessage(pl, "icc_sendToUser", data)
+            world.sendEntityMessage(pl, "icc_sendToUser", msg)
           end
           return true
         end
@@ -55,8 +137,25 @@ function proximitychat:onSendMessage(data)
 
       promises:add(sendMessagePromise)
     end
+  end
 
-    player.say(data.text)
+  if data.mode == "Proximity" then
+    local chatBubbleText = stripWhitespace(data.text)
+    if chatBubbleText ~= "" then
+      player.say(chatBubbleText)
+    end
+
+    local proxMsg, localMsg, globalMsg = splitMessage(data)
+    if proxMsg.text ~= "" then
+      sendProximityMessage(proxMsg)
+    end
+    if localMsg.text ~= "" then
+      chat.send(localMsg.text, "Local")
+    end
+    if globalMsg.text ~= "" then
+      chat.send(globalMsg.text, "Broadcast")
+    end
+  else
   end
 end
 

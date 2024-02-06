@@ -49,6 +49,33 @@ function oocchat:formatIncomingMessage(message)
   end
 
   -- Reformat incoming OOC and dice roll messages appropriately.
+  if message.text:find("%(%(%(") then
+    do -- if message.mode ~= "Broadcast" --[[ and message.mode ~= "Local" ]] then
+      message.text = string.gsub(message.text, "%(%(%((.-)%)%)%)", function(s)
+        return "^gray,set;(((" .. stripSets(s) .. ")))^white,set;"
+      end)
+      -- message.text = string.gsub(message.text, "%(%((.*)$", "^gray,set;((%1^white,set;")
+    end
+  end
+
+  if message.text:find("%[%[%[") then
+    do -- if message.mode ~= "Broadcast" --[[ and message.mode ~= "Local" ]] then
+      message.text = string.gsub(message.text, "%[%[%[(.-)]]]", function(s)
+        return "^gray,set;[[[" .. stripSets(s) .. "]]]^white,set;"
+      end)
+      -- message.text = string.gsub(message.text, "%[%[(.*)$", "^gray,set;[[%1^white,set;")
+    end
+  end
+
+  if message.text:find("<<<") then
+    do -- if message.mode ~= "Broadcast" and message.mode ~= "Local" then
+      message.text = string.gsub(message.text, "<<<(.-)>>>", function(s)
+        return "^#ffd499,set;<<<" .. stripSets(s) .. ">>>^white,set;"
+      end)
+      -- message.text = string.gsub(message.text, "<<(.*)$", "^#ffd499,set;<<%1^white,set;")
+    end
+  end
+
   if message.text:find("%(%(") then
     do -- if message.mode ~= "Broadcast" --[[ and message.mode ~= "Local" ]] then
       message.text = string.gsub(message.text, "%(%((.-)%)%)", function(s)

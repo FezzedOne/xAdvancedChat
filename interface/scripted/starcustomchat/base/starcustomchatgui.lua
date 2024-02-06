@@ -157,6 +157,14 @@ function registerCallbacks()
     end
   end)
 
+  shared.setMessageHandler("xAdvChat.sendMessage", function(_, sameClient, chatMessage)
+    if sameClient then
+      if self.irdenChat and self.irdenChat.sendMessage then
+        self.irdenChat:sendMessage(chatMessage.text, chatMessage.mode)
+      end
+    end
+  end)
+
   shared.setMessageHandler( "icc_request_player_portrait", simpleHandler(function()
     if player.id() and world.entityExists(player.id()) then
       return {
@@ -284,6 +292,7 @@ function dismissed()
   shared.chatIsOpen = false
   shared.setMessageHandler("xAdvChat.addMessage", nil)
   shared.setMessageHandler("xAdvChat.getChat", nil)
+  shared.setMessageHandler("xAdvChat.sendMessage", nil)
   shared.setMessageHandler("icc_request_player_portrait", nil)
   -- shared.setMessageHandler("icc_sendToUser", nil)
   shared.setMessageHandler("icc_is_chat_open", nil)

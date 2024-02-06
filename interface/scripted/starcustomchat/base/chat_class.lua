@@ -189,7 +189,7 @@ function IrdenChat:processCommand(text)
       -- if #self.messages > self.config.chatHistoryLimit then
       --   table.remove(self.messages, 1)
       -- end
-      sb.logInfo("Line = \"%s\"", line)
+      -- sb.logInfo("Line = \"%s\"", line)
       self:addMessage({text = line, connection = 0, mode = "CommandResult"})
     end
   end
