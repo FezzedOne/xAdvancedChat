@@ -122,10 +122,12 @@ function IrdenChat:requestPortrait(connection)
   if uuid and not self.savedPortraits[uuid] then
     if entityId and world.entityExists(entityId) then
       promises:add(world.sendEntityMessage(entityId, "icc_request_player_portrait"), function(data)
-        self.savedPortraits[data.uuid] = {
-          portrait = data.portrait,
-          cropArea = data.cropArea
-        }
+        if data then
+          self.savedPortraits[data.uuid] = {
+            portrait = data.portrait,
+            cropArea = data.cropArea
+          }
+        end
         self.connectionToUuid[tostring(connection)] = uuid
         self:processQueue()
       end, function()
