@@ -32,22 +32,32 @@ Features of this mod:
 
 # Plugins
 
-The base mod includes two sample plugins for proximity-based chat and OOC chat.
-They are disabled by default and require patching the **/scripts/starcustomchat/enabledplugins.json** file. For example:
+The base mod includes two plugins for proximity-based chat and OOC chat.
+They are enabled by default in xAdvancedChat. To disable them, or enable your own plugins, make a patch file like this:
 
-    [  {"op": "add", "path": "/-", "value": "oocchat" },   { "op": "add", "path": "/-", "value": "proximitychat" } ]
+```json
+[
+    { "op": "remove", "path": "/", "find": "oocchat" },
+    { "op": "remove", "path": "/", "find": "proximitychat" },
+    { "op": "add", "path": "/-", "value": "customplugin" }
+]
+```
 
-If you want to create your own plugins, have a look at the include samples in the repo:
+Note the xSB-2-specific `"find"` parameters. If you want to create your own plugins, have a look at the included plugins in the repo:
 
 ## Proximity chat
 
-You can specify the stagehand that would receive the message and then resend it to people around, or you can skip the stagehand and send the message around your character. 
+You can specify the stagehand that would receive the message and then resend it to people around it, or you can skip the stagehand and send the message around your character. Works with [StarCustomChat's](https://github.com/KrashV/StarCustomChat) proximity chat.
+
 ![Proximity chat showcase](https://i.imgur.com/fbnNKF0.png)
 *Obviously, only people with the mod installed will receive this message!*
 
+In xAdvancedChat, messages surrounded by triple parentheses or brackets (e.g., `((( OOC message! )))`) or by pipes (e.g., `|"Yelling!|"`) will be "split" from your message and sent to local chat. If the brackets or pipes are immediately preceded by an `@` (e.g., `@((( OOC message! )))` or `@|[Radio] "Radio message!"|`), that part of the message is sent in global/broadcast chat.
+
 ## OOC chat
 
-A simple tab that automatically adds double brackets around your message (`(( ))`). Also places OOC messages in a separate channel which you can turn off.
+A simple tab that automatically adds double brackets around your message (`(( ))`). Also places OOC messages in a separate channel which you can turn off. xAdvancedChat also adds a Rolls channel for dice rolls and other tabletop/mechanics stuff. Any messages posted in that channel will be surrounded by angled brackets (`<< >>`) and may turned off separately from regular OOC messages. Bracketed parts of messages are also automatically colour-coded appropriately, helpfully marking them as "OOC".
+
 ![OOC chat showcase](https://i.imgur.com/AeTFO7a.png)
 
 # Contact the devs
