@@ -52,7 +52,7 @@ You can specify the stagehand that would receive the message and then resend it 
 ![Proximity chat showcase](https://i.imgur.com/fbnNKF0.png)
 *Obviously, only people with the mod installed will receive this message!*
 
-In xAdvancedChat, messages surrounded by triple parentheses or brackets (e.g., `((( OOC message! )))`) or by pipes (e.g., `|"Yelling!|"`) will be "split" from your message and sent to local chat. If the brackets or pipes are immediately preceded by an `@` (e.g., `@((( OOC message! )))` or `@|[Radio] "Radio message!"|`), that part of the message is sent in global/broadcast chat.
+In xAdvancedChat, messages surrounded by triple parentheses or brackets (e.g., `((( OOC message! )))`) or by pipes (e.g., `|"Yelling!"|`) will be "split" from your message and sent to local chat. If the brackets or pipes are immediately preceded by an `@` (e.g., `@((( OOC message! )))` or `@|[Radio] "Radio message!"|`), that part of the message is sent in global/broadcast chat.
 
 ## OOC chat
 
