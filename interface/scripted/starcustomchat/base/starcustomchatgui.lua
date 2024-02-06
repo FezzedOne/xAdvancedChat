@@ -604,6 +604,16 @@ function processEvents(screenPosition)
 end
 
 function processButtonEvents(dt)
+  if shared.startTyping or shared.startCommand then
+    if shared.startCommand then
+      widget.setText("tbxInput", "/")
+    end
+    widget.focus("tbxInput")
+    chat.setInput("")
+    shared.startTyping = false
+    shared.startCommand = false
+  end
+
   if input.keyDown("Return") or input.keyDown("/") and not widget.hasFocus("tbxInput") then
     if input.keyDown("/") then
       widget.setText("tbxInput", "/")

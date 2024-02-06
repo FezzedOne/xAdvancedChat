@@ -7,6 +7,8 @@ if type(shared) ~= "table" then
 end
 
 shared.queuedChatMessages = shared.queuedChatMessages or jarray()
+shared.startTyping = false
+shared.startCommand = false
 
 function init()
   local reasonToNotStart = checkSEAndControls()
@@ -42,14 +44,19 @@ function init()
 end
 
 function checkSEAndControls()
-  local v = require "/scripts/semver.lua"
   -- Now checks whether xSB-2 is loaded and has a minimum version number.
   if not _ENV["xsb"] or not root.assetData then
     return "se_not_found"
   else
-    local v = load(root.assetData("/scripts/semver.lua"))()
-    if v(xsb.version()) < v"2.3.7" then
-      return "se_version"
+    if load then
+      local v = load(root.assetData("/scripts/semver.lua"))()
+      if v(xsb.version()) < v"2.3.7" then
+        return "se_version"
+      end
+    else
+      if not chat then
+        return "se_version"
+      end
     end
     local bindings = root.getConfiguration("bindings")
     if #bindings["ChatBegin"] > 0 or #bindings["ChatBeginCommand"] > 0 or #bindings["InterfaceRepeatCommand"] > 0 then
@@ -62,6 +69,11 @@ function update(dt)
   if not shared.chatIsOpen and self.interface and (input.keyDown("Return") or input.keyDown("/")) then
     player.interact("ScriptPane", self.interface)
     shared.chatIsOpen = true
+    if input.keyDown("Return") then
+      shared.startTyping = true
+    else
+      shared.startCommand = true
+    end
   end
 end
 
