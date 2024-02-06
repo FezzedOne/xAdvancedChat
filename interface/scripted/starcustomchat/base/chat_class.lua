@@ -166,7 +166,7 @@ function IrdenChat:resetChat()
 
   if player.uniqueId() and player.id() and self.savedPortraits[player.uniqueId()] then
     self.savedPortraits[player.uniqueId()] = {
-      portrait = world.entityPortrait(player.id(), "bust"),
+      portrait = world.entityPortrait(player.id(), "full"),
       cropArea = player.getProperty("icc_portrait_frame") or self.config.portraitCropArea
     }
   end

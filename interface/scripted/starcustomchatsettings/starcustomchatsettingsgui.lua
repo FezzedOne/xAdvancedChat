@@ -3,8 +3,8 @@ require "/scripts/util.lua"
 require "/interface/scripted/starcustomchat/base/starcustomchatutils.lua"
 
 function init()
-  self.cropAreaRestrictions = {17, 23, 24, 30}
-  self.sizeRestrictions = {15, 25}
+  self.cropAreaRestrictions = {0, 0, 43, 43}
+  self.sizeRestrictions = {15, 70}
 
   self.cropArea = config.getParameter("portraitFrame")
   self.defaultCropArea = config.getParameter("defaultCropArea")
@@ -93,7 +93,7 @@ function drawCharacter()
   self.portraitCanvas:drawImageRect(self.backImage, {0, 0, backImageSize[1], backImageSize[2]}, 
     {0, 0, canvasSize[1], canvasSize[2]})
 
-  local portrait = world.entityPortrait(player.id(), "bust")
+  local portrait = world.entityPortrait(player.id(), "full")
   for _, layer in ipairs(portrait) do
     self.portraitCanvas:drawImageRect(layer.image, self.cropArea, {0, 0, canvasSize[1], canvasSize[2]})
   end

@@ -234,7 +234,7 @@ function proximitychat:settings_onCursorOverride(screenPosition)
     or widget.inMember("lblProxRadiusHint", screenPosition) then
     
     if player.id() and world.entityPosition(player.id()) then
-      drawCircle(world.entityPosition(player.id()), self.proximityRadius, "green")
+      drawCircle(world.entityPosition(player.id()), self.proximityRadius, {255, 0, 0, 255}, clamp(math.floor(self.proximityRadius * 2.0), 10, 50))
     end
   end
 end

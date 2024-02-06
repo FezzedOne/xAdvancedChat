@@ -168,7 +168,7 @@ function registerCallbacks()
   shared.setMessageHandler( "icc_request_player_portrait", simpleHandler(function()
     if player.id() and world.entityExists(player.id()) then
       return {
-        portrait = world.entityPortrait(player.id(), "bust"),
+        portrait = world.entityPortrait(player.id(), "full"),
         type = "UPDATE_PORTRAIT",
         entityId = player.id(),
         connection = player.id() // -65536,
@@ -473,7 +473,7 @@ function populateList()
         id = player,
         name = world.entityName(player) or "Unknown",
         data = {
-          portrait = world.entityPortrait(player, "bust")
+          portrait = world.entityPortrait(player, "full")
         }
       })
     end
