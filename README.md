@@ -60,6 +60,10 @@ A simple tab that automatically adds double brackets around your message (`(( ))
 
 ![OOC chat showcase](https://i.imgur.com/AeTFO7a.png)
 
+# Redistribution and modification
+
+This mod is under the MIT licence. You can modify the mod however you like, but make sure to credit FezzedOne and Degranon!
+
 # Contact the devs
 
 If you have bug reports, suggestions or other ideas, you can contact:

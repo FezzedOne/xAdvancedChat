@@ -1,0 +1,79 @@
+[h1]xAdvancedChat[/h1]
+
+Replaces the lacklustre vanilla chat box with a new chat box that supports player portraits and more!
+Brought to you with love by Degranon and ported to xSB-2 by FezzedOne.
+
+[h1]Functionality[/h1]
+
+Features of this mod:
+
+[list]
+[*]Localisation: currently supports English and Russian languages
+[*]Two Discord-inspired modes: full and compact
+[*]Quick and easy DM tab
+[*]Collapsing of long messages
+[*]Ability to copy messages
+[*]Message channel filtration
+[*]Plugin system that allows modders to expand this mod's functionality even more! Plugins are cross-compatible with [url=https://github.com/KrashV/StarCustomChat]Degranon's StarCustomChat[/url]
+[/list]
+
+[url=https://i.imgur.com/yLO8qWg.png]Full avatar mode[/url]
+[url=https://i.imgur.com/oXtXDp7.png]Short mode with disabled commands[/url]
+
+[h1]Prerequisites[/h1]
+
+[list]
+[*][url=https://github.com/FezzedOne/xSB-2]xSB-2[/url] v2.3.7+.
+[/list]
+
+[h1]Controls[/h1]
+
+[list]
+[*][b]Mousewheel[/b]: scroll chat up / down
+[*][b]Ctrl[/b] + [b]Mousewheel[/b]: change font size
+[*][b]Shift[/b] + [b]Mousewheel[/b]: scroll up / down twice as fast
+[*][b]Shift[/b] + [b]Up[/b]/[b]Down[/b]: scroll through last sent messages
+[*][b]P[/b] (default, change in the Mod Binds dialogue): repeat last command
+[/list]
+
+[h1]Plugins[/h1]
+
+The base mod includes two plugins for proximity-based chat and OOC chat.
+They are enabled by default in xAdvancedChat. To disable them, or enable your own plugins, make a patch file like this:
+
+[code]
+[
+    { "op": "remove", "path": "/", "find": "oocchat" },
+    { "op": "remove", "path": "/", "find": "proximitychat" },
+    { "op": "add", "path": "/-", "value": "customplugin" }
+]
+[/code]
+
+Note the xSB-2-specific [b]"find"[/b] parameters. If you want to create your own plugins, have a look at the included plugins in the repo:
+
+[h2]Proximity chat[/h2]
+
+You can specify the stagehand that would receive the message and then resend it to people around it, or you can skip the stagehand and send the message around your character. Works with [url=https://github.com/KrashV/StarCustomChat]StarCustomChat's[/url] proximity chat.
+
+[url=https://i.imgur.com/fbnNKF0.png]Proximity chat showcase[/url]
+[i]Obviously, only people with the mod installed will receive this message![/i]
+
+In xAdvancedChat, messages surrounded by triple parentheses or brackets (e.g., [b]((( OOC message! )))[/b]) or by pipes (e.g., [b]|"Yelling!|"[/b]) will be "split" from your message and sent to local chat. If the brackets or pipes are immediately preceded by an [b]@[/b] (e.g., [b]@((( OOC message! )))[/b] or [b]@|[Radio] "Radio message!"|[/b]), that part of the message is sent in global/broadcast chat.
+
+[h2]OOC chat[/h2]
+
+A simple tab that automatically adds double brackets around your message ([code](( ))[/code]). Also places OOC messages in a separate channel which you can turn off. xAdvancedChat also adds a Rolls channel for dice rolls and other tabletop/mechanics stuff. Any messages posted in that channel will be surrounded by angled brackets ([code]<< >>[/code]) and may turned off separately from regular OOC messages. Bracketed parts of messages are also automatically colour-coded appropriately, helpfully marking them as "OOC".
+
+[url=https://i.imgur.com/AeTFO7a.png]OOC chat showcase[/url]
+
+[h1]Redistribution and modification[/h1]
+
+This mod is under the MIT licence. You can modify the mod however you like, but make sure to credit FezzedOne and Degranon!
+
+[h1]Contact the devs[/h1]
+
+If you have bug reports, suggestions or other ideas, you can contact:
+[list]
+[*]@degranon: On Discord (@degranon) or join [url=https://discord.gg/gnu8xRjS9p]his Discord server[/url]
+[*]@fezzedone: On Discord (@fezzedone) or join [url=https://discord.gg/S46Gk2t]his Discord server[/url]
+[/list]
