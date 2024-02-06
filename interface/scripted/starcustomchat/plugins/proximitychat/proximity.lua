@@ -62,7 +62,7 @@ end
 
 function proximitychat:formatIncomingMessage(message)
   if message.mode == "Proximity" then
-    message.portrait = message.portrait and message.portrait ~= "" and message.portrait or message.connection
+    message.portrait = (message.portrait and message.portrait ~= "") and message.portrait or message.connection
   end
   return message
 end

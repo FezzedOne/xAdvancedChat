@@ -29,6 +29,15 @@ function init()
         end
       end
     end)
+    -- Also handle proximity messages here so they don't get "swallowed" when the chat pane is closed.
+    message.setHandler("icc_sendToUser", function(_, _, chatMessage)
+      local chatShown = world.sendEntityMessage(player.id(), "xAdvChat.addMessage", chatMessage):succeeded()
+      if chatShown then
+        shared.queuedChatMessages = jarray()
+      else
+        table.insert(shared.queuedChatMessages, chatMessage)
+      end
+    end)
   end
 end
 

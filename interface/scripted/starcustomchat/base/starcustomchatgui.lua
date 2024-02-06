@@ -170,9 +170,9 @@ function registerCallbacks()
     end
   end))
 
-  shared.setMessageHandler("icc_sendToUser", simpleHandler(function(message)
-    self.irdenChat:addMessage(message)
-  end))
+  -- shared.setMessageHandler("icc_sendToUser", simpleHandler(function(message)
+  --   self.irdenChat:addMessage(message)
+  -- end))
 
   shared.setMessageHandler("icc_is_chat_open", localHandler(function(message)
     return true
@@ -285,7 +285,7 @@ function dismissed()
   shared.setMessageHandler("xAdvChat.addMessage", nil)
   shared.setMessageHandler("xAdvChat.getChat", nil)
   shared.setMessageHandler("icc_request_player_portrait", nil)
-  shared.setMessageHandler("icc_sendToUser", nil)
+  -- shared.setMessageHandler("icc_sendToUser", nil)
   shared.setMessageHandler("icc_is_chat_open", nil)
   shared.setMessageHandler("icc_close_chat", nil)
   shared.setMessageHandler("icc_send_player_portrait", nil)
