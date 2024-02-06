@@ -1,7 +1,7 @@
 # xAdvancedChat
 
 Replaces the lacklustre vanilla chat box with a new chat box that supports player portraits and more!
-Brought to you with love by Degranon and ported to xSB-2 by FezzedOne.
+Created by Degranon, and improved and ported to xSB-2 by FezzedOne.
 
 # Functionality
 
