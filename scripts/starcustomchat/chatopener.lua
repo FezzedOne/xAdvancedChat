@@ -48,15 +48,8 @@ function checkSEAndControls()
   if not _ENV["xsb"] or not root.assetData then
     return "se_not_found"
   else
-    if load then
-      local v = load(root.assetData("/scripts/semver.lua"))()
-      if v(xsb.version()) < v"2.3.7" then
-        return "se_version"
-      end
-    else
-      if not chat then
-        return "se_version"
-      end
+    if not chat then
+      return "se_version"
     end
     local bindings = root.getConfiguration("bindings")
     if #bindings["ChatBegin"] > 0 or #bindings["ChatBeginCommand"] > 0 or #bindings["InterfaceRepeatCommand"] > 0 then
