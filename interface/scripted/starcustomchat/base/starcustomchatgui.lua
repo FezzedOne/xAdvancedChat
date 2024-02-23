@@ -68,7 +68,7 @@ function init()
 
   createTotallyFakeWidgets(chatConfig.wrapWidthFullMode, chatConfig.wrapWidthCompactMode, chatConfig.fontSize)
 
-  local storedMessages = xAdvChatConfig.sentMessages or jarray() -- root.getConfiguration("icc_last_messages", jarray())
+  local storedMessages = xAdvChatConfig.messages or jarray() -- root.getConfiguration("icc_last_messages", jarray())
 
   for btn, isChecked in pairs(config.getParameter("selectedModes") or {}) do
     widget.setChecked(btn, isChecked)

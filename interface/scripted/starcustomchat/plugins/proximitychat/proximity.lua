@@ -6,7 +6,8 @@ proximitychat = PluginClass:new(
 
 function proximitychat:init()
   self:_loadConfig()
-  self.proximityRadius = root.getConfiguration("icc_proximity_radius") or self.proximityRadius
+  local xAdvChatConfig = root.getConfiguration("xAdvancedChat") or jobject()
+  self.proximityRadius = xAdvChatConfig.proximityRadius or self.proximityRadius
 end
 
 function planetTime()
