@@ -154,22 +154,26 @@ function IrdenChat:clearHistory()
 end
 
 function IrdenChat:resetChat()
-  self.chatMode = root.getConfiguration("iccMode") or "modern"
-  self.config.fontSize = root.getConfiguration("icc_font_size") or self.config.fontSize
-  self.maxCharactersAllowed  = root.getConfiguration("icc_max_allowed_characters") or 0
+  local xAdvChatConfig = root.getConfiguration("xAdvancedChat") or jobject()
+  self.chatMode = xAdvChatConfig.mode or "modern"
+  self.config.fontSize = xAdvChatConfig.fontSize or self.config.fontSize
+  self.maxCharactersAllowed = xAdvChatConfig.maxCharacters or 0
+  -- self.chatMode = root.getConfiguration("iccMode") or "modern"
+  -- self.config.fontSize = root.getConfiguration("icc_font_size") or self.config.fontSize
+  -- self.maxCharactersAllowed  = root.getConfiguration("icc_max_allowed_characters") or 0
   
   --[[
     starcustomchat.utils.sendMessageToStagehand(self.stagehandType, "icc_savePortrait", {
     entityId = player.id(),
     portrait = nil,
-    cropArea = player.getProperty("icc_portrait_frame",  self.config.portraitCropArea)
+    cropArea = player.getProperty("xAdvChatPortraitFrame",  self.config.portraitCropArea)
   })
   --]]
 
   if player.uniqueId() and player.id() and self.savedPortraits[player.uniqueId()] then
     self.savedPortraits[player.uniqueId()] = {
       portrait = world.entityPortrait(player.id(), "full"),
-      cropArea = player.getProperty("icc_portrait_frame") or self.config.portraitCropArea
+      cropArea = player.getProperty("xAdvChatPortraitFrame") or self.config.portraitCropArea
     }
   end
 

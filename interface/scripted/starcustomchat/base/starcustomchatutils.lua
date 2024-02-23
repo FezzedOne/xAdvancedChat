@@ -9,13 +9,15 @@ function starcustomchat.utils.cleanNickname(nick)
 end
 
 function starcustomchat.utils.getLocale()
-  return root.getConfiguration("iccLocale") or "en"
+  local xAdvChatConfig = root.getConfiguration("xAdvancedChat") or jobject()
+  return xAdvChatConfig.locale or "en"
 end
 
 function starcustomchat.utils.buildLocale(localePluginConfig)
   local addLocaleKeys = copy(localePluginConfig or {})
 
-  local locale = root.getConfiguration("iccLocale") or "en"
+  local xAdvChatConfig = root.getConfiguration("xAdvancedChat") or jobject()
+  local locale = xAdvChatConfig.locale or "en"
   starcustomchat.currentLocale = locale
   
   for key, translates in pairs(addLocaleKeys) do 

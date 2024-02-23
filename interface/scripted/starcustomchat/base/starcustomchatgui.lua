@@ -25,6 +25,7 @@ function init()
   self.availableCommands = root.assetJson("/interface/scripted/starcustomchat/base/commands.config")
 
   local chatConfig = root.assetJson("/interface/scripted/starcustomchat/base/chat.config")
+  local xAdvChatConfig = root.getConfiguration("xAdvancedChat") or jobject()
 
   local plugins = {}
   self.localePluginConfig = {}
@@ -61,25 +62,25 @@ function init()
   self.runCallbackForPlugins("init")
   localeChat(self.localePluginConfig)
 
-  chatConfig.fontSize = root.getConfiguration("icc_font_size") or chatConfig.fontSize
-  local expanded = config.getParameter("expanded")
+  chatConfig.fontSize = xAdvChatConfig.fontSize or chatConfig.fontSize
+  local expanded = xAdvChatConfig.expanded or config.getParameter("expanded")
   setSizes(expanded, chatConfig, config.getParameter("currentSizes"))
 
   createTotallyFakeWidgets(chatConfig.wrapWidthFullMode, chatConfig.wrapWidthCompactMode, chatConfig.fontSize)
 
-  local storedMessages = root.getConfiguration("icc_last_messages", jarray())
+  local storedMessages = xAdvChatConfig.sentMessages or jarray() -- root.getConfiguration("icc_last_messages", jarray())
 
   for btn, isChecked in pairs(config.getParameter("selectedModes") or {}) do
     widget.setChecked(btn, isChecked)
   end
 
-  local maxCharactersAllowed = root.getConfiguration("icc_max_allowed_characters") or 0
+  local maxCharactersAllowed = xAdvChatConfig.maxCharacters or 0 -- root.getConfiguration("icc_max_allowed_characters") or 0
 
   self.irdenChat = IrdenChat:create(self.canvasName, self.highlightCanvasName, self.commandPreviewCanvasName,
     chatConfig, player.id(), storedMessages, self.chatMode,
     expanded, config.getParameter("portraits"), config.getParameter("connectionToUuid"), config.getParameter("chatLineOffset"), maxCharactersAllowed, self.runCallbackForPlugins)
 
-  self.lastCommand = root.getConfiguration("icc_last_command")
+  self.lastCommand = xAdvChatConfig.lastCommand -- root.getConfiguration("icc_last_command")
   self.contacts = {}
   self.tooltipFields = {}
 
@@ -88,7 +89,7 @@ function init()
   self.savedCommandSelection = 0
 
   self.selectedMessage = nil
-  self.sentMessages = root.getConfiguration("icc_my_messages",{}) or {}
+  self.sentMessages = xAdvChatConfig.sentMessages or jarray() -- root.getConfiguration("icc_my_messages",{}) or {}
   self.sentMessagesLimit = 15
   self.currentSentMessage = nil
 
@@ -105,11 +106,12 @@ function init()
     widget.focus("tbxInput")
   end
 
-  local currentMessageMode = config.getParameter("currentMessageMode")
+  local currentMessageMode = xAdvChatConfig.lastMessageMode or config.getParameter("currentMessageMode")
   if currentMessageMode then
     widget.setSelectedOption("rgChatMode", currentMessageMode)
     widget.setFontColor("rgChatMode." .. currentMessageMode, chatConfig.modeColors[widget.getData("rgChatMode." .. currentMessageMode).mode])
   else
+    widget.setSelectedOption("rgChatMode", 1)
     widget.setFontColor("rgChatMode.1", chatConfig.modeColors[widget.getData("rgChatMode.1").mode])
   end
 
@@ -172,7 +174,7 @@ function registerCallbacks()
         type = "UPDATE_PORTRAIT",
         entityId = player.id(),
         connection = player.id() // -65536,
-        cropArea = player.getProperty("icc_portrait_frame") or self.irdenChat.config.portraitCropArea,
+        cropArea = player.getProperty("xAdvChatPortraitFrame") or self.irdenChat.config.portraitCropArea,
         uuid = player.uniqueId()
       }
     end
@@ -196,7 +198,8 @@ function registerCallbacks()
   end))
 
   shared.setMessageHandler( "icc_reset_settings", localHandler(function(data)
-    createTotallyFakeWidgets(self.irdenChat.config.wrapWidthFullMode, self.irdenChat.config.wrapWidthCompactMode, root.getConfiguration("icc_font_size") or self.irdenChat.config.fontSize)
+    local xAdvChatConfig = root.getConfiguration("xAdvancedChat") or jobject()
+    createTotallyFakeWidgets(self.irdenChat.config.wrapWidthFullMode, self.irdenChat.config.wrapWidthCompactMode, xAdvChatConfig.fontSize or self.irdenChat.config.fontSize)
     self.runCallbackForPlugins("onSettingsUpdate", data)
     
     localeChat(self.localePluginConfig)
@@ -262,7 +265,8 @@ function localeChat(localePluginConfig)
 
   local savedText = widget.getText("tbxInput")
   local hasFocus = widget.hasFocus("tbxInput")
-  self.chatMode = root.getConfiguration("iccMode") or "modern"
+  local xAdvChatConfig = root.getConfiguration("xAdvancedChat") or jobject()
+  self.chatMode = xAdvChatConfig.mode or "modern"
   if self.chatMode ~= "compact" then self.chatMode = "modern" end
 
   local buttons = config.getParameter("gui")["rgChatMode"]["buttons"]
@@ -587,7 +591,10 @@ function processEvents(screenPosition)
       local mouseWheel = event.data.mouseWheel == "MouseWheelUp" and 1 or -1
       if input.key("LCtrl") then
         self.irdenChat.config.fontSize = math.min(math.max(self.irdenChat.config.fontSize + mouseWheel, 6), 10)
-        root.setConfiguration("icc_font_size", self.irdenChat.config.fontSize)
+        local xAdvChatConfig = root.getConfiguration("xAdvancedChat") or jobject()
+        xAdvChatConfig.fontSize = self.irdenChat.config.fontSize
+        -- root.setConfiguration("icc_font_size", self.irdenChat.config.fontSize)
+        root.setConfiguration("xAdvancedChat", xAdvChatConfig)
         createTotallyFakeWidgets(self.irdenChat.config.wrapWidthFullMode, self.irdenChat.config.wrapWidthCompactMode, self.irdenChat.config.fontSize)
         self.irdenChat:processQueue()
       else
@@ -842,7 +849,7 @@ function openSettings()
   chatConfigInterface.frameImage = self.irdenChat.config.icons.frame
   chatConfigInterface.proximityRadius = self.irdenChat.proximityRadius
   chatConfigInterface.defaultCropArea = self.irdenChat.config.portraitCropArea
-  chatConfigInterface.portraitFrame = player.getProperty("icc_portrait_frame") or self.irdenChat.config.portraitCropArea
+  chatConfigInterface.portraitFrame = player.getProperty("xAdvChatPortraitFrame") or self.irdenChat.config.portraitCropArea
   chatConfigInterface.fontSize = self.irdenChat.config.fontSize
   chatConfigInterface.maxCharactersAllowed = self.irdenChat.maxCharactersAllowed
   player.interact("ScriptPane", chatConfigInterface)
@@ -882,9 +889,16 @@ end
 function saveEverythingDude()
   -- Save messages and last command
   local messages = self.irdenChat:getMessages()
-  root.setConfiguration("icc_last_messages", messages)
-  root.setConfiguration("icc_last_command", self.lastCommand)
-  root.setConfiguration("icc_my_messages", self.sentMessages)
+  local xAdvChatConfig = root.getConfiguration("xAdvancedChat") or jobject()
+  xAdvChatConfig.messages = messages
+  xAdvChatConfig.lastCommand = self.lastCommand
+  xAdvChatConfig.sentMessages = self.sentMessages
+  xAdvChatConfig.lastMessageMode = widget.getSelectedOption("rgChatMode")
+  xAdvChatConfig.expanded = self.irdenChat and self.irdenChat.expanded or false
+  -- root.setConfiguration("icc_last_messages", messages)
+  -- root.setConfiguration("icc_last_command", self.lastCommand)
+  -- root.setConfiguration("icc_my_messages", self.sentMessages)
+  root.setConfiguration("xAdvancedChat", xAdvChatConfig)
 end
 
 function uninit()

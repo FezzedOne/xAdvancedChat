@@ -134,7 +134,10 @@ function changeLanguage()
   local currentLocale = widget.getData("btnLanguage")
   local i = index(self.availableLocales, currentLocale)
   local locale = self.availableLocales[(i % #self.availableLocales) + 1]
-  root.setConfiguration("iccLocale", locale)
+  local xAdvChatConfig = root.getConfiguration("xAdvancedChat") or jobject()
+  xAdvChatConfig.locale = locale
+  root.setConfiguration("xAdvancedChat", xAdvChatConfig)
+  -- root.setConfiguration("iccLocale", locale)
   localeSettings(self.localePluginConfig)
 
   save()
@@ -175,10 +178,17 @@ function index(tab, value)
 end
 
 function save()
-  root.setConfiguration("iccMode", widget.getData("btnMode"))
-  root.setConfiguration("icc_font_size", self.fontSize)
-  root.setConfiguration("icc_max_allowed_characters", self.maxCharactersAllowed)
-  player.setProperty("icc_portrait_frame",  self.cropArea)
+  local xAdvChatConfig = root.getConfiguration("xAdvancedChat") or jobject()
+  xAdvChatConfig.mode = widget.getData("btnMode")
+  xAdvChatConfig.fontSize = self.fontSize
+  xAdvChatConfig.maxCharacters = self.maxCharactersAllowed
+  -- root.setConfiguration("iccMode", widget.getData("btnMode"))
+  -- root.setConfiguration("icc_font_size", self.fontSize)
+  -- root.setConfiguration("icc_max_allowed_characters", self.maxCharactersAllowed)
+  root.setConfiguration("xAdvancedChat", xAdvChatConfig)
+  player.setProperty("xAdvChatPortraitFrame", self.cropArea)
+  player.setProperty("icc_portrait_frame", nil)
+  -- player.setProperty("icc_portrait_frame", self.cropArea)
 
   world.sendEntityMessage(player.id(), "icc_reset_settings")
   self.runCallbackForPlugins("settings_onSave", starcustomchat.locale)
