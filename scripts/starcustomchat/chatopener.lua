@@ -60,6 +60,8 @@ end
 
 function update(dt)
   if not shared.chatIsOpen and self.interface and (input.keyDown("Return") or input.keyDown("/")) then
+    local xAdvChatConfig = root.getConfiguration("xAdvancedChat") or jobject()
+    self.interface.expanded = xAdvChatConfig.expanded
     player.interact("ScriptPane", self.interface)
     shared.chatIsOpen = true
     if input.keyDown("Return") then
