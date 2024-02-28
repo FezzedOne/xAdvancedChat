@@ -94,6 +94,23 @@ function starcustomchat.utils.sendMessageToStagehand(stagehandType, message, dat
   end)
 end
 
+-- FezzedOne: Needed to borrow this from StarCustomChat to prevent UTF-8 errors. Ugh.
+function starcustomchat.utils.utf8Substring(inputString, startPos, endPos)
+  -- Check if startPos is within the valid range
+  startPos = math.min(startPos, endPos)
+
+  endPos = math.min(endPos, utf8.len(inputString))
+
+  -- Calculate the byte offsets for the start and end positions
+  local byteStart = utf8.offset(inputString, startPos)
+  local byteEnd = utf8.offset(inputString, endPos + 1) - 1
+
+  -- Extract the substring
+  local result = string.sub(inputString, byteStart, byteEnd)
+
+  return result
+end
+
 function starcustomchat.utils.createStagehandWithData(stagehandType, data)
   world.spawnStagehand(world.entityPosition(player.id()), stagehandType, {data = data})
 end
