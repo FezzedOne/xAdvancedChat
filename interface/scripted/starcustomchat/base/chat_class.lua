@@ -242,9 +242,11 @@ function IrdenChat:drawIcon(target, nickname, messageOffset, color, time, recipi
   end
 
   local function drawImage(image, offset)
-    local frameSize = root.imageSize(image)
-    local size = portraitSizeFromBaseFont(self.config.fontSize)
-    self.canvas:drawImageRect(image, {0, 0, frameSize[1], frameSize[2]}, {offset[1], offset[2], offset[1] + size, offset[2] + size})
+    local status, frameSize = pcall(root.imageSize, image)
+    if status then
+      local size = portraitSizeFromBaseFont(self.config.fontSize)
+      self.canvas:drawImageRect(image, {0, 0, frameSize[1], frameSize[2]}, {offset[1], offset[2], offset[1] + size, offset[2] + size})
+    end
   end
 
   local function drawPortrait(portrait, messageOffset, cropArea, color)
@@ -253,7 +255,10 @@ function IrdenChat:drawIcon(target, nickname, messageOffset, color, time, recipi
     local size = portraitSizeFromBaseFont(self.config.fontSize)
 
     for _, layer in ipairs(portrait) do
-      self.canvas:drawImageRect(layer.image, cropArea or self.config.portraitCropArea, {offset[1], offset[2], offset[1] + size, offset[2] + size})
+      local status, _ = pcall(root.imageSize, layer.image)
+      if status then
+        self.canvas:drawImageRect(layer.image, cropArea or self.config.portraitCropArea, {offset[1], offset[2], offset[1] + size, offset[2] + size})
+      end
     end
     drawModeIcon(offset)
     drawImage(self.config.icons.frame, offset)

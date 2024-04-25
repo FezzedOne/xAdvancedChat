@@ -61,7 +61,8 @@ function starcustomchat.utils.getCommands(allCommands, substr)
   for type, commlist in pairs(allCommands) do 
     for _, comm in ipairs(commlist) do
       if type ~= "admin" or (type == "admin" and player.isAdmin()) then
-        if string.find(comm, substr) then
+        local status, found = pcall(string.find, comm, substr)
+        if status and found then
           table.insert(availableCommands, comm)
         end
       end
