@@ -17,7 +17,7 @@ function init()
     sewarningConfig.reason = reasonToNotStart
     player.interact("ScriptPane", sewarningConfig)
   else
-    shared.queuedChatMessages = storage.queuedChatMessages or shared.queuedChatMessages
+    shared.queuedChatMessages = storage.queuedChatMessages or shared.queuedChatMessages or {}
     storage.queuedChatMessages = nil
     self.interface = buildChatInterface()
     shared.setMessageHandler = message.setHandler
